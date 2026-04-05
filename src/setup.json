@@ -1,5 +1,5 @@
 {
-    "watchlist":["GOOG", "AMD"],
-    "my_stocks": ["VOLV.", "INVE"]
-
+    "stocks": {"INVE-B.ST": 260,
+                "VOLV-B.ST": 200},
+    "watchlist": {"AMD": 1}
 }
