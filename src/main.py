@@ -4,7 +4,12 @@ import pandas as pd
 import yfinance as yf
 import json 
 import os
+import matplotlib
+matplotlib.use('Qt5Agg') 
+import matplotlib.pyplot as plt
 from reader.StockReader import StockReader
+from analyzer.StockAnalyzer import StockAnalyzer
+from visualizer.StockVisualizer import StockVisualizer
 
 def main():
 
@@ -13,8 +18,8 @@ def main():
 
     category = "stocks"
 
-    reader = StockReader(json_path, category)
-
+    reader = StockReader(json_path, category, period = "5y")
+    """
     try:
 
         tickers = reader.get_ticker()
@@ -26,15 +31,34 @@ def main():
     except Exception as e:
         print(f"ERROR: {e}")
 
+    """
 
     try:
+    
+        analyzer = StockAnalyzer(reader)
+        visualizer = StockVisualizer()
+        
+        # Hämta listan med alla tickers från din JSON
+        tickers = reader.get_ticker()
+        prices = reader.get_price_data()
 
-        reader.get_history(period = "5y")
+        print(f"Hittade {len(tickers)} aktier. Startar analys...")
 
-        stock_price = reader.get_price_data()
-        stock_volume = reader.get_volume_data()
+        for ticker in tickers:
+            print(f"Genererar graf för: {ticker}")
+            
+            # Vi sätter en unik titel för varje graf
+            visualizer.title = f"Analys: {ticker}"
+            
+            # Anropa din SMA-plot för den aktuella aktien i loopen
+            visualizer.plot_line_sma(
+                ticker, 
+                prices, 
+                analyzer.sma50, 
+                analyzer.sma200
+            )
 
-        print(stock_price)
+        print("Analys klar för alla aktier!")
 
     except Exception as e:
         print(f"ERROR: {e}")

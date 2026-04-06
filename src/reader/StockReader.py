@@ -2,17 +2,19 @@ import json
 import os
 import pandas as pd
 import yfinance as yf
-#import requests
 from curl_cffi import requests
 
 class StockReader:
-    def __init__(self, input_file, category_name):
+    def __init__(self, input_file, category_name, period = "10d"):
 
         self.input_file = input_file
         self.category_name = category_name
+        self.period = period
         self.data = None
         self.price_data = None
         self.volume_data = None
+
+        self.get_history(period=period)
 
     def _load_file(self):
         if not os.path.exists(self.input_file):
@@ -46,7 +48,6 @@ class StockReader:
             return None
         
         session = requests.Session(impersonate="chrome")
-        #a = yf.download("VOLV-B.ST", start="2023-01-01", end="2024-01-01")
         
         try:
            
