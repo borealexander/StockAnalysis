@@ -29,9 +29,12 @@ def main():
 
     try:
 
-        stock_data = reader.get_history(period = "10d")
+        reader.get_history(period = "5y")
 
-        print(stock_data)
+        stock_price = reader.get_price_data()
+        stock_volume = reader.get_volume_data()
+
+        print(stock_price)
 
     except Exception as e:
         print(f"ERROR: {e}")

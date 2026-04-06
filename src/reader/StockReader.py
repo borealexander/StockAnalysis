@@ -2,8 +2,8 @@ import json
 import os
 import pandas as pd
 import yfinance as yf
-import requests
-
+#import requests
+from curl_cffi import requests
 
 class StockReader:
     def __init__(self, input_file, category_name):
@@ -11,6 +11,8 @@ class StockReader:
         self.input_file = input_file
         self.category_name = category_name
         self.data = None
+        self.price_data = None
+        self.volume_data = None
 
     def _load_file(self):
         if not os.path.exists(self.input_file):
@@ -43,13 +45,7 @@ class StockReader:
         if not tickers:
             return None
         
-        session = requests.Session()
-        session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
-        })
-
-        #session = requests.Session(impersonate="chrome")
-        
+        session = requests.Session(impersonate="chrome")
         #a = yf.download("VOLV-B.ST", start="2023-01-01", end="2024-01-01")
         
         try:
@@ -61,14 +57,21 @@ class StockReader:
                 progress = False,
                 auto_adjust = True)
 
-            if len(tickers) > 1:
-                return data['Close']
+            if not data.empty:
+                self.price_data = data['Close']
+                self.volume_data = data['Volume']
             else:
-                return data['Close'] 
-                
+                print("No data found!")
+
+            return self
         except Exception as e:
             print(f"Could not get stock data: {e}")
             return None
 
-        #data = yf.download(tickers, period = period, interval = "1d")['Close']
-        return(data)
+    def get_price_data(self):
+
+        return self.price_data
+    
+    def get_volume_data(self):
+
+        return self.volume_data
