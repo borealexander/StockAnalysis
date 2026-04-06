@@ -55,11 +55,11 @@ class StockReader:
                 interval = "1d",
                 session = session, 
                 progress = False,
-                auto_adjust = True)
+                auto_adjust = False)
 
             if not data.empty:
-                self.price_data = data['Close']
-                self.volume_data = data['Volume']
+                self.price_data = data['Close'].round(2)
+                self.volume_data = data['Volume'].round(0).astype('Int64')
             else:
                 print("No data found!")
 
