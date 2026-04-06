@@ -2,15 +2,15 @@ import matplotlib.pyplot as plt
 
 def line_plot_sma(ticker, price_data, sma50, sma200, colors, title: "Stock"):
     plt.figure(figsize=(10, 5))
-    plt.plot(price_data.index, price_data[ticker], label='Pris', color=colors['price'], linewidth=1.25)
+    plt.plot(price_data.index, price_data[ticker], label='Price', color=colors['price'], linewidth=1, alpha=0.9)
 
     if sma50 is not None and ticker in sma50.columns:
-        plt.plot(sma50.index, sma50[ticker], label='SMA 50', color=colors['sma50'], linestyle='--', alpha=0.8)
+        plt.plot(sma50.index, sma50[ticker], label='SMA 50', color=colors['sma50'], linestyle='--',  linewidth=0.75, alpha=0.75)
         
     if sma200 is not None and ticker in sma200.columns:
-        plt.plot(sma200.index, sma200[ticker], label='SMA 200', color=colors['sma200'], linestyle='--', alpha=0.8)
+        plt.plot(sma200.index, sma200[ticker], label='SMA 200', color=colors['sma200'], linestyle='--',  linewidth=0.75, alpha=0.75)
 
-    plt.title(f"{title}: {ticker}")
+    plt.title(f"{title}")
     plt.xlabel("Date")
     plt.ylabel("Price")
     plt.legend() 

@@ -16,6 +16,11 @@ def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     json_path = os.path.join(current_dir, "setup.json")
 
+    with open(json_path, 'r', encoding='utf-8') as f:
+        setup_data = json.load(f)
+
+    names = setup_data.get("name_conversion", {})
+
     category = "stocks"
 
     reader = StockReader(json_path, category, period = "5y")
@@ -47,6 +52,7 @@ def main():
         for ticker in tickers:
             print(f"Genererar graf för: {ticker}")
             
+            title_name = names.get(ticker, ticker)
             # Vi sätter en unik titel för varje graf
             visualizer.title = f"Analys: {ticker}"
             
@@ -55,7 +61,8 @@ def main():
                 ticker, 
                 prices, 
                 analyzer.sma50, 
-                analyzer.sma200
+                analyzer.sma200,
+                title = title_name
             )
 
         print("Analys klar för alla aktier!")
