@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from visualizer.line_plot import line_plot
 from visualizer.line_plot_sma import line_plot_sma
+from visualizer.line_plot_sma_multiple import line_plot_sma_multiple
 
 
 class StockVisualizer:
@@ -25,3 +26,14 @@ class StockVisualizer:
         plot_title = title if title else self.title
 
         line_plot_sma(ticker, data, sma50, sma200, colors = self.colors, title = plot_title)
+
+    def plot_line_sma_multiple(self, ticker, data, sma50, sma200, colors = None, title = None):
+
+        if colors is None:
+            colors = self.colors
+
+        plot_title = title if title else self.title
+
+        line_plot_sma_multiple(ticker, data, sma50, sma200, colors = self.colors, title = plot_title)
+
+        

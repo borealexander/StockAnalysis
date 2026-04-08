@@ -65,6 +65,14 @@ def main():
                 title = title_name
             )
 
+            visualizer.plot_line_sma_multiple(
+                ticker, 
+                prices, 
+                analyzer.sma50, 
+                analyzer.sma200,
+                title = title_name
+            )
+
         print("Analys klar för alla aktier!")
 
     except Exception as e:
