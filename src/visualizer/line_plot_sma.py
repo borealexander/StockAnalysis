@@ -6,6 +6,7 @@ def line_plot_sma(ticker, price_data, sma50, sma200, colors, title: "Stock", ax 
         fig, ax = plt.subplots(figsize = (15,9))
         is_standalone = True
     else:
+        fig = ax.get_figure()
         is_standalone = False
 
     price_plot = price_data[ticker].dropna()

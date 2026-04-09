@@ -73,6 +73,21 @@ def main():
                 title = title_name
             )
 
+            visualizer.hist_plot_log_returns_multiple(
+                ticker=ticker,
+                log_returns=analyzer.log_returns,
+                title=title_name,
+                bins=40
+            )
+
+            visualizer.hist_plot_log_returns(
+                ticker=ticker,
+                log_returns=analyzer.log_returns,
+                title=title_name,
+                bins=60,
+                show_density=True
+            )
+
         print("Analys klar för alla aktier!")
 
     except Exception as e:

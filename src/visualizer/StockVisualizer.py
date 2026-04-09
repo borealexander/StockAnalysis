@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from visualizer.line_plot import line_plot
 from visualizer.line_plot_sma import line_plot_sma
 from visualizer.line_plot_sma_multiple import line_plot_sma_multiple
+from visualizer.hist_plot_returns import plot_hist_returns
+from visualizer.hist_plot_returns_multiple import plot_hist_returns_multiple
 
 
 class StockVisualizer:
@@ -11,7 +13,9 @@ class StockVisualizer:
         self.title = "Price"
         self.colors = {"price": "#2E5A88",
                        "sma50": "darkorange",
-                       "sma200": "firebrick"}
+                       "sma200": "firebrick",
+                       "log_return": "#006400",
+                       "log_return_normal": "red"}
 
     
     def plot_line(self, ticker, data):
@@ -35,5 +39,31 @@ class StockVisualizer:
         plot_title = title if title else self.title
 
         line_plot_sma_multiple(ticker, data, sma50, sma200, colors = self.colors, title = plot_title)
+
+    def hist_plot_log_returns(self, ticker, log_returns, colors = None, title = None, bins = 30, show_density = True):
+
+        if colors is None:
+            colors = self.colors
+
+        plot_hist_returns(ticker = ticker, 
+                          log_returns_data = log_returns[ticker], 
+                          colors = colors,
+                          title = title, 
+                          bins = bins,
+                          show_density = show_density,
+                          ax = None)
+
+    def hist_plot_log_returns_multiple(self, ticker, log_returns, colors = None, title = None, bins = 30):
+
+        if colors is None:
+            colors = self.colors
+
+        plot_hist_returns_multiple(ticker = ticker, 
+                                   log_returns_data = log_returns, 
+                                   colors = colors, 
+                                   title = title, 
+                                   bins = bins, show_density = True)
+
+
 
         
