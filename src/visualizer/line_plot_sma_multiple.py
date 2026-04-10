@@ -25,7 +25,8 @@ def line_plot_sma_multiple(ticker, price_data, sma50, sma200, colors, title = "S
                       title = plot_label,
                       ax = ax,
                       show_legend = (i == 0),
-                      show_labels = False)
+                      show_xlabel = False,
+                      show_ylabel = False)
         ax.tick_params(axis='x', rotation=45)
 
     fig.suptitle(f"{title} ({ticker})", fontsize=18, fontweight='bold', y=1.05)

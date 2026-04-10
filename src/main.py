@@ -88,6 +88,14 @@ def main():
                 show_density=True
             )
 
+            visualizer.line_hist_multiple(ticker = ticker,
+                                        data = prices,
+                                        sma50 = analyzer.sma50, 
+                                        sma200 = analyzer.sma200,
+                                        log_returns = analyzer.log_returns,
+                                        title = title_name,
+                                        bins = 30)
+
         print("Analys klar för alla aktier!")
 
     except Exception as e:

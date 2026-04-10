@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def line_plot_sma(ticker, price_data, sma50, sma200, colors, title: "Stock", ax = None, show_legend = True, show_labels = True):
+def line_plot_sma(ticker, price_data, sma50, sma200, colors, title: "Stock", ax = None, show_legend = True, show_xlabel = True, show_ylabel = True):
 
     if ax is None:
         fig, ax = plt.subplots(figsize = (15,9))
@@ -27,8 +27,10 @@ def line_plot_sma(ticker, price_data, sma50, sma200, colors, title: "Stock", ax 
 
     ax.set_title(title)
     
-    if show_labels:
+    if show_xlabel:
         ax.set_xlabel("Date")
+    
+    if show_ylabel:
         ax.set_ylabel("Price")
     
     ax.grid(True, alpha = 0.25)

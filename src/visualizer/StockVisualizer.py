@@ -5,6 +5,7 @@ from visualizer.line_plot_sma import line_plot_sma
 from visualizer.line_plot_sma_multiple import line_plot_sma_multiple
 from visualizer.hist_plot_returns import plot_hist_returns
 from visualizer.hist_plot_returns_multiple import plot_hist_returns_multiple
+from visualizer.line_hist_multiple import plot_line_hist_multiple
 
 
 class StockVisualizer:
@@ -14,8 +15,8 @@ class StockVisualizer:
         self.colors = {"price": "#2E5A88",
                        "sma50": "darkorange",
                        "sma200": "firebrick",
-                       "log_return": "#006400",
-                       "log_return_normal": "red"}
+                       "log_return": "darkgreen",
+                       "log_return_normal": "indianred"}
 
     
     def plot_line(self, ticker, data):
@@ -53,7 +54,7 @@ class StockVisualizer:
                           show_density = show_density,
                           ax = None)
 
-    def hist_plot_log_returns_multiple(self, ticker, log_returns, colors = None, title = None, bins = 30):
+    def hist_plot_log_returns_multiple(self, ticker, log_returns, colors = None, title = None, bins = 30, show_density = True):
 
         if colors is None:
             colors = self.colors
@@ -62,7 +63,23 @@ class StockVisualizer:
                                    log_returns_data = log_returns, 
                                    colors = colors, 
                                    title = title, 
-                                   bins = bins, show_density = True)
+                                   bins = bins,
+                                     show_density = show_density)
+        
+    def line_hist_multiple(self, ticker, data, sma50, sma200, log_returns, colors = None, title = None, bins = 30, show_density = True):
+        
+        if colors is None:
+            colors = self.colors
+
+        plot_line_hist_multiple(ticker = ticker,
+                                price_data = data,
+                                sma50 = sma50,
+                                sma200 = sma200,
+                                log_returns = log_returns,
+                                colors = colors,
+                                title = title,
+                                bins = bins,
+                                show_density = show_density)
 
 
 
