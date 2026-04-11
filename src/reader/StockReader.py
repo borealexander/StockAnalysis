@@ -5,16 +5,17 @@ import yfinance as yf
 from curl_cffi import requests
 
 class StockReader:
-    def __init__(self, input_file, category_name, period = "10d"):
+    def __init__(self, input_file, category_name, period = "10d", interval = "1d"):
 
         self.input_file = input_file
         self.category_name = category_name
         self.period = period
+        self.interval = interval
         self.data = None
         self.price_data = None
         self.volume_data = None
 
-        self.get_history(period=period)
+        self.get_history(period = self.period, interval = self.interval)
 
     def _load_file(self):
         if not os.path.exists(self.input_file):
@@ -40,7 +41,7 @@ class StockReader:
         category_data = self.get_category()
         return category_data.get(ticker, 0)
 
-    def get_history(self, period = "5y"):
+    def get_history(self, period = "5y", interval = "1d"):
 
         tickers = self.get_ticker()
 
@@ -53,7 +54,7 @@ class StockReader:
            
             data = yf.download(tickers, 
                 period = period,
-                interval = "1d",
+                interval = interval,
                 session = session, 
                 progress = False,
                 auto_adjust = False)
