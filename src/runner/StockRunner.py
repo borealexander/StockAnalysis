@@ -1,19 +1,39 @@
 import os
 import json
+import pandas as pd
 from reader.StockReader import StockReader
 from analyzer.StockAnalyzer import StockAnalyzer
 from visualizer.StockVisualizer import StockVisualizer
 
 class StockRunner:
 
-    def __init__(self, source_type = "json", json_path = None, sheet_url = None, category = "stocks"):
+    def __init__(self, source_type = "json", json_path = None, sheet_url = None, ticker_col = None, name_col = None, category = "stocks"):
         self.source_type = source_type.lower()
         self.json_path = json_path
         self.sheet_url = sheet_url
+        self.ticker_col = ticker_col
         self.category = category
 
-        self.setup_data = self._load_config()
-        self.names = self.setup_data.get("name_conversion", {})
+        self.tickers = []
+        self.names = {}
+
+        
+        #self.setup_data = self._load_config()
+        #self.names = self.setup_data.get("name_conversion", {})
+
+        if self.source_type == "googlesheets":
+            df = pd.read_csv(self.sheet_url)
+            self.tickers = df[self.ticker_col].dropna().unique().tolist()
+            self.names = dict(zip(df[self.ticker_col], df[name_col]))
+
+        elif self.source_type == "json":
+            config = self._load_config()
+            self.names = config.get("name_conversion", {})
+
+            category_data = config.get(self.category, {})
+            self.tickers = list(category_data.keys())
+
+
 
 
     def _load_config(self):
@@ -25,14 +45,13 @@ class StockRunner:
 
         try:
 
-            reader = StockReader(input_file = self.json_path, 
-                                 category_name = self.category, 
+            reader = StockReader(tickers = self.tickers,
                                  period = "5y", interval = "1d")
 
             analyzer = StockAnalyzer(reader)
             visualizer = StockVisualizer()
 
-            tickers = reader.get_ticker()
+            tickers = reader.get_tickers()
             prices = reader.get_price_data()
 
             print(f"Found {len(tickers)} stocks. Starting analysis")

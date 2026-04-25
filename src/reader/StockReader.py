@@ -5,45 +5,27 @@ import yfinance as yf
 from curl_cffi import requests
 
 class StockReader:
-    def __init__(self, input_file, category_name, period = "10d", interval = "1d"):
+    def __init__(self, tickers, period = "10d", interval = "1d"):
 
-        self.input_file = input_file
-        self.category_name = category_name
+
+        self.tickers = tickers if isinstance(tickers, list) else [tickers]
         self.period = period
         self.interval = interval
-        self.data = None
+
         self.price_data = None
         self.volume_data = None
 
         self.get_history(period = self.period, interval = self.interval)
 
-    def _load_file(self):
-        if not os.path.exists(self.input_file):
-            raise FileNotFoundError(f"File {self.input_file} does not exist!")
-        
-        with open(self.input_file, "r", encoding = "utf-8") as f:
-            full_json = json.load(f)
-            self.data = full_json.get(self.category_name, {})
 
-    def get_category(self):
+    def get_tickers(self):
 
-        if self.data is None:
-            self._load_file()
-        return self.data
-
-    def get_ticker(self):
-
-        category_data = self.get_category()
-        return list(category_data.keys())
+        return self.tickers
     
-    def get_number_for_ticker(self,ticker):
-
-        category_data = self.get_category()
-        return category_data.get(ticker, 0)
 
     def get_history(self, period = "5y", interval = "1d"):
 
-        tickers = self.get_ticker()
+        tickers = self.get_tickers()
 
         if not tickers:
             return None
