@@ -7,7 +7,7 @@ from visualizer.StockVisualizer import StockVisualizer
 
 class StockRunner:
 
-    def __init__(self, source_type = "json", json_path = None, sheet_url = None, ticker_col = None, name_col = None, category = "stocks"):
+    def __init__(self, source_type = "json", json_path = None, sheet_url = None, ticker_col = None, name_col = None, amount_col = None, category = "stocks"):
         self.source_type = source_type.lower()
         self.json_path = json_path
         self.sheet_url = sheet_url
@@ -16,6 +16,7 @@ class StockRunner:
 
         self.tickers = []
         self.names = {}
+        self.amount = {}
 
         
         #self.setup_data = self._load_config()
@@ -25,6 +26,7 @@ class StockRunner:
             df = pd.read_csv(self.sheet_url)
             self.tickers = df[self.ticker_col].dropna().unique().tolist()
             self.names = dict(zip(df[self.ticker_col], df[name_col]))
+            self.amount = dict(zip(df[self.ticker_col], df[amount_col]))
 
         elif self.source_type == "json":
             config = self._load_config()
@@ -32,6 +34,8 @@ class StockRunner:
 
             category_data = config.get(self.category, {})
             self.tickers = list(category_data.keys())
+
+            self.amount = category_data
 
 
 
@@ -53,6 +57,11 @@ class StockRunner:
 
             tickers = reader.get_tickers()
             prices = reader.get_price_data()
+            exchange_rates = reader.get_exchange_rates()
+
+            summary = analyzer.get_summary(amount = self.amount,
+                                           exchange_rates = exchange_rates)
+            print(summary)
 
             print(f"Found {len(tickers)} stocks. Starting analysis")
 

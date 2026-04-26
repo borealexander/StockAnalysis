@@ -14,7 +14,9 @@ def main():
 
     #current_dir = os.path.dirname(os.path.abspath(__file__))
     #json_path = os.path.join(current_dir, "setup.json")
-    runner = StockRunner(source_type = "googlesheets", ticker_col = "Ticker", name_col = "Aktie",
+
+
+    runner = StockRunner(source_type = "googlesheets", ticker_col = "Ticker", name_col = "Aktie", amount_col = "Antal",
                          sheet_url = "https://docs.google.com/spreadsheets/d/1GDWvx2OEvFGUsPXciL8WMBd6D_q-pYSVmPUW8qKQW4s/export?format=csv&gid=171477467")
     runner.run_stock_analysis()
 

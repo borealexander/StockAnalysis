@@ -56,7 +56,67 @@ class StockAnalyzer:
         return log_ret
 
 ##############################################
-    
-    def get_above_moving_average(self):
 
-        return None
+    def get_above_moving_average(self, ticker, window = 50):
+
+        price = self.price_data[ticker].dropna()
+        sma = self.get_sma(window)[ticker].dropna()
+
+        # check if last day price is above sma
+        is_above = price.iloc[-1] > sma.iloc[-1]
+    
+        count = 0
+        for i in range(1, len(price)):
+            p = price.iloc[-i]
+            s = sma.iloc[-i]
+
+            if is_above:
+                if p > s:
+                    count +=1
+                else:
+                    break
+            else:
+                if p < s:
+                    count += 1
+                else:
+                    break
+
+        return count if is_above else - count
+
+    def get_above_moving_average_all(self, window = 50):
+
+        results = {}
+        for ticker in self.price_data.columns:
+            results[ticker] = self.get_above_moving_average(ticker, window)
+
+        return results
+    
+    
+    
+
+############################################
+
+    def calculate_portfolio_value(self):
+
+        total_value = 0
+
+        return total_value
+    
+
+    def get_summary(self, amount, exchange_rates):
+
+        summary_df = pd.DataFrame(index = self.price_data.columns)
+        
+        summary_df["price"] = self.price_data.iloc[-1]
+        summary_df["amount"] = summary_df.index.map(amount).fillna(0).astype(int)
+        summary_df["currency"] = [self.reader.get_currency(t) for t in summary_df.index]
+        summary_df["above_sma50"] = [self.get_above_moving_average(t, 50) for t in summary_df.index]
+        summary_df["above_sma200"] = [self.get_above_moving_average(t, 200) for t in summary_df.index]
+
+        def calculate_sek(row):
+            rate = exchange_rates.get(row["currency"], 1.0)
+            return row["price"] * row["amount"] * rate
+
+        summary_df["value"] = summary_df.apply(calculate_sek, axis = 1).round(0)
+
+        return summary_df

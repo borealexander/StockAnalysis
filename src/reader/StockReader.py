@@ -59,3 +59,22 @@ class StockReader:
     def get_volume_data(self):
 
         return self.volume_data
+    
+    def get_currency(self, ticker):
+
+        ticker_obj = yf.Ticker(ticker)
+        currency = ticker_obj.info.get("currency", "Unknown")
+
+        return currency
+    
+    def get_exchange_rates(self):
+
+        currencies = ["USDSEK=X", "EURSEK=X", "DKKSEK=X"]
+        data = yf.download(currencies, period = "5d")["Close"].ffill().bfill().iloc[-1]
+
+        rates = {"USD": data["USDSEK=X"],
+                 "EUR": data["EURSEK=X"],
+                 "DKK": data["DKKSEK=X"],
+                 "SEK": 1.0}
+        
+        return rates
