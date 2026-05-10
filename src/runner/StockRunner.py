@@ -57,7 +57,11 @@ class StockRunner:
 
             tickers = reader.get_tickers()
             prices = reader.get_price_data()
+
+            sharp_ratios = analyzer.get_sharpe_ratio(r_f = 0.02, days_in_year=250, period=250)
+
             exchange_rates = reader.get_exchange_rates()
+            #sharp_ratios = analyzer.get_sharpe_ratio(r_f = 0.02, days_in_year=250, period=250)
 
             summary = analyzer.get_summary(amount = self.amount,
                                            exchange_rates = exchange_rates)

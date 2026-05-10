@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import quantstats as qs
 
 class StockAnalyzer:
     def __init__(self, reader):
@@ -91,6 +92,24 @@ class StockAnalyzer:
 
         return results
     
+
+    def get_sharpe_ratio(self, r_f = 0.02, days_in_year = 250, period = 250):
+
+        if self.log_returns is None:
+            return None
+        
+        ret_data = self.log_returns.tail(period)
+        
+        daily_rf = r_f/days_in_year
+
+        daily_returns = ret_data - daily_rf
+        avg_returns = daily_returns.mean()
+
+        sd = ret_data.std()
+        #qs.stats.sharpe(ret_data, rf=0.02)
+        sharp_ratios = (avg_returns/sd) * np.sqrt(days_in_year)
+    
+        return sharp_ratios
     
     
 
@@ -112,6 +131,8 @@ class StockAnalyzer:
         summary_df["currency"] = [self.reader.get_currency(t) for t in summary_df.index]
         summary_df["above_sma50"] = [self.get_above_moving_average(t, 50) for t in summary_df.index]
         summary_df["above_sma200"] = [self.get_above_moving_average(t, 200) for t in summary_df.index]
+        summary_df["1-year_sharpe"] = self.get_sharpe_ratio(r_f = 0.02, days_in_year = 250, period = 250)
+        summary_df["3-year_sharpe"] = self.get_sharpe_ratio(r_f = 0.02, days_in_year = 250, period = 750)
 
         def calculate_sek(row):
             rate = exchange_rates.get(row["currency"], 1.0)
