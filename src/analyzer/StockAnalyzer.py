@@ -3,7 +3,7 @@ import numpy as np
 import quantstats as qs
 
 class StockAnalyzer:
-    def __init__(self, reader):
+    def __init__(self, reader: StockReader):
 
         self.reader = reader
         self.price_data = reader.get_price_data()
@@ -100,13 +100,17 @@ class StockAnalyzer:
         
         ret_data = self.log_returns.tail(period)
         
-        daily_rf = r_f/days_in_year
+        #daily_rf = r_f/days_in_year
+        daily_rf = np.log(1 + r_f) / days_in_year
 
         daily_returns = ret_data - daily_rf
         avg_returns = daily_returns.mean()
 
         sd = ret_data.std()
         #qs.stats.sharpe(ret_data, rf=0.02)
+        #qs.stats.sharpe(pd.to_numeric(ret_data, errors='coerce').dropna())
+        #qs.stats.sharpe(ret_data.iloc[:,1], rf=0.02)
+
         sharp_ratios = (avg_returns/sd) * np.sqrt(days_in_year)
     
         return sharp_ratios
@@ -126,7 +130,7 @@ class StockAnalyzer:
 
         summary_df = pd.DataFrame(index = self.price_data.columns)
         
-        summary_df["price"] = self.price_data.iloc[-1]
+        summary_df["price"] = self.price_data.ffill().iloc[-1]
         summary_df["amount"] = summary_df.index.map(amount).fillna(0).astype(int)
         summary_df["currency"] = [self.reader.get_currency(t) for t in summary_df.index]
         summary_df["above_sma50"] = [self.get_above_moving_average(t, 50) for t in summary_df.index]

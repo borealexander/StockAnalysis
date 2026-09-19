@@ -65,6 +65,7 @@ class StockRunner:
 
             summary = analyzer.get_summary(amount = self.amount,
                                            exchange_rates = exchange_rates)
+
             print(summary)
 
             print(f"Found {len(tickers)} stocks. Starting analysis")
