@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import quantstats as qs
+from reader.StockReader import StockReader
 
 class StockAnalyzer:
     def __init__(self, reader: StockReader):
